@@ -70,9 +70,11 @@ function App() {
               setFormData={setFormData}
               click={click} 
               products={products}
+              setClick= {setClick}
               setProducts={setProducts} />
               
             <ListProducts
+            setProducts= {setProducts}
             setFormData= {setFormData}
              setClick={ setClick }
              data={products}/>

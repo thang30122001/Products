@@ -2,8 +2,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { Box } from '@material-ui/core';
+import axios from 'axios';
 // import { useState } from 'react';
-function CreateProcduct({ click, products, setProducts, formData: data, setFormData: setData, }) {
+function CreateProcduct({ click, products, setProducts, formData: data, setFormData: setData,setClick }) {
   // console.log(click);
   // const prod = click === -1 ? { id: '', name: '', price: '' } : products[click];
   // console.log(click, prod)
@@ -15,6 +16,38 @@ function CreateProcduct({ click, products, setProducts, formData: data, setFormD
       [name]: value
     });
   }
+
+  const themMoi= function(event){
+      
+      
+      const createApi ='https://601246c684695f0017779f0a.mockapi.io/products';
+      axios.post(createApi, data)
+      .then(function (response){
+        setProducts([
+        ...products,
+        response.data,
+      ]);
+      setData({
+        id:'',
+        name:'',
+        price:'',
+      })
+      })
+      .catch(function (error){
+        console.log(error);
+      })
+  }
+
+  const btnRefesh= function (event){
+     setClick(-1);
+     setData( {
+     id:'',
+     name:'',
+     price:'',
+    })
+     
+  }
+
   const onSubmitHandler=(e)=>{
     e.preventDefault();
     if (click===-1) {
@@ -39,6 +72,7 @@ function CreateProcduct({ click, products, setProducts, formData: data, setFormD
       }); 
     }
   }
+ 
   return (
     <div>
       <form onSubmit={ onSubmitHandler }>
@@ -47,6 +81,7 @@ function CreateProcduct({ click, products, setProducts, formData: data, setFormD
           <Grid item={8}>
             <Grid container justify="center" spacing={0}>
               <TextField
+                disabled
                 onChange={onChangeHandler}
                 name="id"
                 value={data.id}
@@ -71,10 +106,18 @@ function CreateProcduct({ click, products, setProducts, formData: data, setFormD
                 variant="outlined" />
               <Box textAlign='center'>
                 <Button
+                onClick={themMoi}
                   type="submit"
                   variant="contained"
                   color="primary"
                   style={{ marginTop: '20px' }}>Submit
+               </Button>
+                <Button     
+                  type="reset"
+                  onClick={btnRefesh}
+                  variant="contained"
+                  color="secondary"
+                  style={{ marginTop: '20px', marginLeft: '20px' }}>Refesh
                </Button>
               </Box>
             </Grid>
@@ -82,12 +125,7 @@ function CreateProcduct({ click, products, setProducts, formData: data, setFormD
         </Grid>
       </form>
       <form >
-      <Button     
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  style={{ marginTop: '20px' }}>Refesh
-               </Button>
+     
       </form>
     </div>
 

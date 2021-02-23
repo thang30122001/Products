@@ -4,13 +4,38 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
+import axios from 'axios';
 
- function ListProducts({ data,setClick ,setFormData}){
+
+ function ListProducts({ data,setClick ,setFormData, setProducts}){
     // const list=data.map((value,index)=>{ });
     const onClickHandler=(event,index, value)=>{
         setClick(index);
         setFormData(value);
     }
+    const btnDeleteOnclick= function (event, value, index){
+        event.stopPropagation();
+        console.log(value, '---' ,index);
+        const deleteUrl ="https://601246c684695f0017779f0a.mockapi.io/products/" + value.id;
+        axios.delete(deleteUrl)
+        .then(function (response){
+          const listNew=  data.filter(function (val, idx) {
+                
+                if(idx===index){
+                      //loại bỏ phần tử
+                return false;
+                }
+                //giữ nguyên phần tử
+                return true;
+               
+            });
+            setProducts(listNew);
+        })
+        .catch(function (error){
+            console.error(error);
+        })
+      }
   return(
       <Table>
           <TableHead>
@@ -18,6 +43,7 @@ import PropTypes from 'prop-types';
                   <TableCell>ID</TableCell>
                   <TableCell>Name</TableCell>
                   <TableCell>Price</TableCell>
+                  <TableCell>Action</TableCell>
               </TableRow>
           </TableHead>
           <TableBody>
@@ -33,6 +59,18 @@ import PropTypes from 'prop-types';
                           <TableCell> {value.id} </TableCell>
                           <TableCell> {value.name} </TableCell>
                           <TableCell> {value.price} </TableCell>
+                          <TableCell>
+                              <Button
+                               color="secondary"
+                               onClick={
+                                   (event)=>{
+                                       btnDeleteOnclick(event, value, index);
+                                   }
+                               }
+                                >
+                                      Delete
+                              </Button>
+                          </TableCell>
                       </TableRow>
                   })
               }
