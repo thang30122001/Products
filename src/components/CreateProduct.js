@@ -47,29 +47,63 @@ function CreateProcduct({ click, products, setProducts, formData: data, setFormD
     })
      
   }
+  const upDate= function(event){
+    // setProducts(function (oldState) {
+    //   const newState= oldState.map((value, index) => {
+    //     if(index === click) {
+    //       return data;
+    //     } else {
+    //       return value;
+    //     }
+    //     // return index === click ? data : value;
+    //   });
+    //   return newState;
+    // }); 
+    const updateApiUrl= 'https://601246c684695f0017779f0a.mockapi.io/products/'+data.id;
 
+    axios.put(updateApiUrl, data)
+    .then (function (response){
+      console.log('response');
+       console.log(response);
+      const newProcduct= products.map(function(value, index){
+          if(index=== click) {
+            return response.data;
+          }
+          else{
+            return value;
+          }
+       });
+       setProducts(newProcduct);
+    })
+    .catch(function (error){
+      console.log(error);
+    })
+
+  }
   const onSubmitHandler=(e)=>{
     e.preventDefault();
     if (click===-1) {
-      //tạo mới
+      // //tạo mới
       
-      setProducts([
-        ...products,
-        data,
-      ])
+      // setProducts([
+      //   ...products,
+      //   data,
+      // ])
+      themMoi();
     } else {
-      //cập nhật
-      setProducts(function (oldState) {
-        const newState= oldState.map((value, index) => {
-          if(index === click) {
-            return data;
-          } else {
-            return value;
-          }
-          // return index === click ? data : value;
-        });
-        return newState;
-      }); 
+      // //cập nhật
+      // setProducts(function (oldState) {
+      //   const newState= oldState.map((value, index) => {
+      //     if(index === click) {
+      //       return data;
+      //     } else {
+      //       return value;
+      //     }
+      //     // return index === click ? data : value;
+      //   });
+      //   return newState;
+      // }); 
+      upDate();
     }
   }
  
@@ -106,7 +140,8 @@ function CreateProcduct({ click, products, setProducts, formData: data, setFormD
                 variant="outlined" />
               <Box textAlign='center'>
                 <Button
-                onClick={themMoi}
+                
+                // onClick={themMoi}
                   type="submit"
                   variant="contained"
                   color="primary"
